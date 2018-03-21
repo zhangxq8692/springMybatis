@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       <!--配置文件获取-->
+    <context:property-placeholder location="classpath:*.properties"/>
+    <!--注解扫描-->
+    <mvc:annotation-driven/>
+    <!--包扫描-->
+    <context:component-scan base-package="com.zhangxq"/>
+    <!--视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <mvc:view-controller path="/" view-name="redirect:/test/list"/>
+    <!--连接池-->
+    <bean id="dbcp" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!--配置事务管理器-->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dbcp"/>
+    </bean>
+    <!--配置注解方式处理事务管理-->
+    <tx:annotation-driven transaction-manager="dataSourceTransactionManager" proxy-target-class="true"/>
+    <!--配置mybatis-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--设置连接池-->
+        <property name="dataSource" ref="dbcp"/>
+        <!--配置文件位置-->
+        <property name="configLocation" value="classpath:mybatis.cfg.xml"/>
+        <!--设置扫描mapper配置文件位置-->
+        <property name="mapperLocations" value="classpath*:mappings/**/*.xml"/>
+    </bean>
+    <!--接口扫描器配置-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--设置接口扫描位置-->
+        <property name="basePackage" value="com.zhangxq.**.dao"/>
+        <!--设置扫描位置所对应注解的接口-->
+        <property name="annotationClass" value="com.zhangxq.modules.common.annotation.Mybatis"/>
+    </bean>
+    <!--end mybatis-->
+    <!--设置activiti-->
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="dataSource" ref="dbcp"/>
+        <property name="databaseSchemaUpdate" value="true"/>
+        <!--设置工作流事务管理-->
+        <property name="transactionManager" ref="dataSourceTransactionManager"/>
+        <!--自动部署资源-->
+        <property name="deploymentResources" value="classpath*:bpmns/*.bpmn"/>
+    </bean>
+    <!--配置processEngine-->
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration"/>
+    </bean>
+    <!--获取工作流服务-->
+    <bean factory-bean="processEngine" factory-method="getRepositoryService"/>
+    <bean factory-bean="processEngine" factory-method="getRuntimeService"/>
+    <bean factory-bean="processEngine" factory-method="getManagementService"/>
+    <bean factory-bean="processEngine" factory-method="getIdentityService"/>
+    <bean factory-bean="processEngine" factory-method="getHistoryService"/>
+    <bean factory-bean="processEngine" factory-method="getFormService"/>
+    <bean factory-bean="processEngine" factory-method="getRuntimeService"/>
+    <!--aop配置-->
+    <aop:aspectj-autoproxy expose-proxy="true"/>
+
+    <bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="minIdle" value="${redis.minIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}"/>
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+        <property name="maxTotal" value="${redis.maxTotal}"/>
+    </bean>
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="close">
+        <constructor-arg name="poolConfig" ref="redisPoolConfig"/>
+        <constructor-arg name="host" value="${redis.host}"/>
+        <constructor-arg name="port" value="${redis.port}"/>
+        <constructor-arg name="timeout" value="${redis.timeout}"/>
+       <!-- <constructor-arg name="password" value="${redis.password}"/>-->
+    </bean>
+    <!--reddis-->
+    <bean id="jedis" class="redis.clients.jedis.Jedis" factory-bean="jedisPool" factory-method="getResource" destroy-method="close"/>
+</beans>
