@@ -94,6 +94,7 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
             }
         }
         return false;
+
     }
 
     /**
