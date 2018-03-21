@@ -71,6 +71,7 @@
     <!--aop配置-->
     <aop:aspectj-autoproxy expose-proxy="true"/>
 
+    <!--Redis配置文件对象-->
     <bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxIdle" value="${redis.maxIdle}"/>
         <property name="minIdle" value="${redis.minIdle}"/>
@@ -78,6 +79,7 @@
         <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
         <property name="maxTotal" value="${redis.maxTotal}"/>
     </bean>
+    <!--Redis连接池-->
     <bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="close">
         <constructor-arg name="poolConfig" ref="redisPoolConfig"/>
         <constructor-arg name="host" value="${redis.host}"/>
@@ -85,6 +87,6 @@
         <constructor-arg name="timeout" value="${redis.timeout}"/>
        <!-- <constructor-arg name="password" value="${redis.password}"/>-->
     </bean>
-    <!--reddis-->
+    <!--获取一个Redis连接-->
     <bean id="jedis" class="redis.clients.jedis.Jedis" factory-bean="jedisPool" factory-method="getResource" destroy-method="close"/>
 </beans>
