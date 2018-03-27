@@ -54,8 +54,9 @@ public class BaseServiceImpl<E extends BaseEntity> extends BaseRedisServiceImpl<
      * @return
      */
     public List<E> findAllList() {
+        // 获取一个key
         String name = getKey("findAllList");
-
+        // 通过key在缓存中查询
         List<E> list = cacheListGet(name);
         if (list == null) {
             synchronized (this) {
