@@ -3,7 +3,6 @@ package com.zhangxq.modules.common.service;
 import com.zhangxq.modules.common.dao.BaseDao;
 import com.zhangxq.modules.common.entity.BaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import redis.clients.jedis.Jedis;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,15 +15,13 @@ import java.util.List;
  * @date: 2018/2/10 9:50
  * @description:
  */
-public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
+public class BaseServiceImpl<E extends BaseEntity> extends BaseRedisServiceImpl<E> implements BaseService<E> {
 
     /**
      * Dao层对象
      */
     @Autowired
     private BaseDao<E> dao;
-    @Autowired
-    private Jedis jedis;
 
     /**
      * 获取单条数据
@@ -33,28 +30,17 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
      * @return
      */
     public E get(E e) {
-        E t = null;
-
-        byte[] bytes = jedis.get(e.getKeyHash());
-        if (bytes != null) {
-            System.out.println("到Redis获取到数据__________________:" + e.byteToObject(bytes).toString());
-            t = (E) e.byteToObject(bytes);
-        } else {
-            synchronized (BaseServiceImpl.class) {
-                bytes = jedis.get(e.getKeyHash());
-                if (bytes != null) {
-                    System.out.println("到Redis获取到数据__________________:" + e.byteToObject(bytes).toString());
-                    t = (E) e.byteToObject(bytes);
-                } else {
+        // 从缓存中获取数据
+        E t = cacheGet(e);
+        // 数据不存在时处理
+        if (t == null) {
+            // 进入同步块
+            synchronized (e.getId()) {
+                // 在次判断是否有另一线程进入同步块
+                if ((t = cacheGet(e)) == null) {
                     t = dao.get(e);
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
                     if (t != null) {
-                        String set = jedis.setex(t.getKeyHash(), 1, t.objectToBytes());
-                        System.out.println("保存到Redis__________________:" + set);
+                        cacheSet(t, TIME_OUT_OBJECT);
                     }
                 }
             }
@@ -68,7 +54,20 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
      * @return
      */
     public List<E> findAllList() {
-        List<E> list = dao.findAll();
+        String name = getKey("findAllList");
+
+        List<E> list = cacheListGet(name);
+        if (list == null) {
+            synchronized (this) {
+                if (list == null) {
+                    list = dao.findAll();
+                    if (list != null) {
+                        cacheListSet(name, TIME_OUT_LIST, list);
+                    }
+                }
+            }
+        }
+
         if (!list.isEmpty()) {
             return list;
         }
@@ -85,7 +84,7 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
         if (e != null) {
             // 判断对象是否为新数据，分别进行处理
             if (e.isNewRecord()) {      // 新对象
-                //创建并设置ID
+                // 创建并设置ID
                 e.preInset();
                 return (dao.insert(e)) != 0;
             } else {                    // 做更新处理
@@ -106,4 +105,18 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
     public boolean delete(E e) {
         return (dao.delete(e)) != 0;
     }
+
+
+    /**
+     * 获取一个key
+     *
+     * @param suffix 追加的key字符串，如:方法名
+     * @return key
+     */
+    private String getKey(String suffix) {
+        // 获取当前类的类名
+        String name = getClass().getName();
+        return name.substring(name.lastIndexOf(".") + 1) + "::" + suffix;
+    }
+
 }

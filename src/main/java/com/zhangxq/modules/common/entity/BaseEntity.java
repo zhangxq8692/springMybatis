@@ -2,13 +2,11 @@ package com.zhangxq.modules.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zhangxq.modules.common.tool.HashSerializable;
 import com.zhangxq.modules.common.tool.IDGen;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +16,7 @@ import java.util.Objects;
  * @date: 2018/2/9 10:56
  * @description: 基础实体类
  */
-public class BaseEntity extends HashSerializable implements Serializable {
+public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 492675805485242915L;
     /**
      * 实体编号（唯一ID)
@@ -78,6 +76,7 @@ public class BaseEntity extends HashSerializable implements Serializable {
     @JsonIgnore
     public boolean isNewRecord(){
         if(StringUtils.isEmpty(id)){
+
             return true;
         }
         return false;
@@ -95,14 +94,6 @@ public class BaseEntity extends HashSerializable implements Serializable {
     public void preUpdate(){
         Date date = new Date();
         this.setUpdateDate(date);
-    }
-    @JsonIgnore
-    public byte[] getKeyHash(){
-        return (Objects.hash(this.id) + "").getBytes();
-    }
-    @JsonIgnore
-    public byte[] objectToBytes(){
-        return super.objectToBytes(this);
     }
     /**
      * 删除标志: 0:正常
