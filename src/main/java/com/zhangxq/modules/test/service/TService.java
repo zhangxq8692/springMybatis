@@ -3,6 +3,7 @@ package com.zhangxq.modules.test.service;
 import com.zhangxq.modules.common.service.BaseServiceImpl;
 import com.zhangxq.modules.test.entity.Tentity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
  * @description:
  */
 @Service
+@Transactional
 public class TService extends BaseServiceImpl<Tentity> {
 
 }

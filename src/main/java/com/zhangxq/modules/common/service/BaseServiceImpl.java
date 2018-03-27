@@ -35,7 +35,7 @@ public class BaseServiceImpl<E extends BaseEntity> extends BaseRedisServiceImpl<
         // 数据不存在时处理
         if (t == null) {
             // 进入同步块
-            synchronized (e.getId()) {
+            synchronized (this) {
                 // 在次判断是否有另一线程进入同步块
                 if ((t = cacheGet(e)) == null) {
                     t = dao.get(e);
@@ -94,7 +94,6 @@ public class BaseServiceImpl<E extends BaseEntity> extends BaseRedisServiceImpl<
             }
         }
         return false;
-
     }
 
     /**

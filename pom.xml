@@ -12,13 +12,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>4.0.7.RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>spring-aop</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-            </exclusions>
+            <version>4.1.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -47,11 +41,11 @@
             <version>3.2.8.RELEASE</version>
             <exclusions>
                 <exclusion>
-                    <artifactId>spring-core</artifactId>
+                    <artifactId>spring-beans</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>spring-beans</artifactId>
+                    <artifactId>spring-core</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
             </exclusions>
@@ -98,7 +92,7 @@
             <version>5.21.0</version>
             <exclusions>
                 <exclusion>
-                    <artifactId>spring-beans</artifactId>
+                    <artifactId>spring-context</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
                 <exclusion>
@@ -106,7 +100,7 @@
                     <groupId>org.springframework</groupId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>spring-context</artifactId>
+                    <artifactId>spring-beans</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
                 <exclusion>
@@ -154,20 +148,24 @@
             <version>1.5.0.RELEASE</version>
             <exclusions>
                 <exclusion>
+                    <artifactId>spring-beans</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
                     <artifactId>spring-core</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>spring-beans</artifactId>
+                    <artifactId>spring-aop</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
                 <exclusion>
                     <artifactId>spring-context</artifactId>
                     <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
                 </exclusion>
                 <exclusion>
                     <artifactId>spring-tx</artifactId>

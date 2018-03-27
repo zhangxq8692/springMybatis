@@ -1,6 +1,5 @@
 package com.zhangxq.modules.test.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zhangxq.modules.common.entity.BaseEntity;
 
 import java.io.Serializable;
@@ -14,7 +13,7 @@ import java.io.Serializable;
  * @description:
  */
 public class Tentity extends BaseEntity implements Serializable{
-    @JsonProperty("myName")
+    //@JsonProperty("myName")
     private String name;
     private Integer age;
 

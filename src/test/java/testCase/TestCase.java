@@ -13,21 +13,16 @@ import org.junit.Test;
 public class TestCase {
     @Test
     public void test(){
-      /* Scanner sc = new Scanner(System.in);
-        CODE:
-       for (int i=0;i<100;i++) {
-           System.out.println("i="+i);
-           *//*int tem = sc.nextInt();*//*
-           if (i > 10) {
-               continue CODE;
-           }
-       }
-        CODE:{
-            System.out.println("123");
-        }
-        System.out.println("over");*/
-        int i=1;
-        i+=i++;
-        System.out.println(i);
+        System.out.println(Add(3, 15));
+    }
+    int Add(int num1, int num2) {
+        int sum = 0;
+        do {
+            sum = num1 ^ num2;//不考虑进位相加
+            num2 = (num1 & num2) << 1;//进位
+            num1 = sum;
+        }while (num2 !=0);//有进位继续相加
+
+        return sum;
     }
 }
