@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.zhangxq.modules.common.tool.IDGen;
 import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -28,8 +27,7 @@ import java.util.Date;
  * Include.NON_NULL 属性为NULL 不序列化
  */
 
-public class BaseEntity implements Serializable {
-    private static final long serialVersionUID = 492675805485242915L;
+public class BaseEntity{
     /**
      * 实体编号（唯一ID)
      */

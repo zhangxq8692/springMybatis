@@ -2,44 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhangxq.modules.test.dao.TDao">
     <sql id="column">
-        e.id AS id,
-        e.name AS name,
-        e.age AS age,
-        e.create_date AS createDate,
-        e.update_date AS updateDate,
-        e.del_flag AS delFlag
+        e.id as id,
+        e.name as name,
+        e.age as age,
+        e.create_date as createDate,
+        e.update_date as updateDate,
+        e.del_flag as delFlag
     </sql>
     <select id="get" parameterType="string" resultType="tentity">
-        SELECT
-          <include refid="column"/>
-        FROM
-          emp AS e
-        WHERE e.id=#{id}
+        select
+        <include refid="column"/>
+        from
+        emp as e
+        where e.id=#{id}
     </select>
     <select id="findAll" resultType="tentity">
-        SELECT
-          <include refid="column"/>
-        FROM
-          emp AS e
-        WHERE e.del_flag = "0"
+        select
+        <include refid="column"/>
+        from
+        emp as e
+        where e.del_flag = "0"
     </select>
     <update id="update">
-        UPDATE emp SET
+        update emp set
             name=#{name},
             age=#{age},
             create_date=#{createDate},
             update_date=#{updateDate}
-        WHERE id=#{id}
+        where id=#{id}
     </update>
     <insert id="insert">
-        INSERT INTO emp(
+        insert into emp(
               id,
               name,
               age,
               create_date,
               update_date,
               del_flag
-            )VALUES(
+            )values(
               #{id},
               #{name},
               #{age},
@@ -48,10 +48,11 @@
               #{delFlag}
             )
     </insert>
+
     <update id="delete">
-        UPDATE emp AS e SET
-            e.del_flag="1"
-        WHERE  e.id=#{id}
+        update emp as e set
+        e.del_flag="1"
+           where e.id=#{id}
     </update>
 
 </mapper>

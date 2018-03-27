@@ -17,4 +17,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TService extends BaseServiceImpl<Tentity> {
 
+
 }
