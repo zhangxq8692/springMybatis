@@ -2,7 +2,10 @@ package com.zhangxq.modules.common.tool;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,11 +18,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class LoggerBean {
+    private Logger logger = LoggerFactory.getLogger(LoggerBean.class);
     public LoggerBean() {
-        System.out.println("loggerBean加载");
+        logger.info("AOP功能注入初始化");
     }
     @Before("execution(* com.zhangxq.modules.common.controller.*.list(..))")
     public void logController(){
-        System.out.println("AOP功能注入");
+        logger.info("AOP功能注入");
     }
 }

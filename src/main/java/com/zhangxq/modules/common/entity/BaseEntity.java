@@ -2,10 +2,11 @@ package com.zhangxq.modules.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.zhangxq.modules.common.constants.Constants;
 import com.zhangxq.modules.common.tool.IDGen;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -27,7 +28,7 @@ import java.util.Date;
  * Include.NON_NULL 属性为NULL 不序列化
  */
 
-public class BaseEntity{
+public class BaseEntity implements Serializable, Constants {
     /**
      * 实体编号（唯一ID)
      */
@@ -39,7 +40,7 @@ public class BaseEntity{
     /**
      * 更新日期
      */
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    /*@JsonInclude(JsonInclude.Include.NON_DEFAULT)*/
     private Date updateDate;
     /**
      * 删除标志
@@ -112,14 +113,4 @@ public class BaseEntity{
         Date date = new Date();
         this.setUpdateDate(date);
     }
-
-    /**
-     * 删除标志: 0:正常
-     */
-    public static final String DEL_FLAG_NORMAL = "0";
-
-    /**
-     * 删除标志: 1:删除
-     */
-    public static final String DEL_FLAG_DELETE = "1";
 }

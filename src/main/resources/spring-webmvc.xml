@@ -4,7 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
        <!--配置文件获取-->
     <context:property-placeholder location="classpath:*.properties"/>
     <!--注解扫描-->
@@ -16,7 +16,7 @@
         <property name="prefix" value="/WEB-INF/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-    <mvc:view-controller path="/" view-name="redirect:/test/list"/>
+    <mvc:view-controller path="/" view-name="redirect:/test/list/"/>
     <!--连接池-->
     <bean id="dbcp" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="url" value="${jdbc.url}"/>
@@ -67,8 +67,8 @@
     <bean factory-bean="processEngine" factory-method="getIdentityService"/>
     <bean factory-bean="processEngine" factory-method="getHistoryService"/>
     <bean factory-bean="processEngine" factory-method="getFormService"/>
-    <bean factory-bean="processEngine" factory-method="getRuntimeService"/>
-    <!--aop配置-->
+
+    <!--aop使用注解配置-->
     <aop:aspectj-autoproxy expose-proxy="true"/>
 
     <!--Redis配置文件对象-->
@@ -77,8 +77,10 @@
         <property name="minIdle" value="${redis.minIdle}"/>
         <property name="maxWaitMillis" value="${redis.maxWaitMillis}"/>
         <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+        <property name="testWhileIdle" value="${redis.testWhileIdle}"/>
         <property name="maxTotal" value="${redis.maxTotal}"/>
     </bean>
+    <!--配置哨兵列表-->
     <bean id="sentinelConfiguration" class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
         <constructor-arg name="master" value="mymaster"/>
         <constructor-arg name="sentinelHostAndPorts">
@@ -89,11 +91,14 @@
             </set>
         </constructor-arg>
     </bean>
+    <!--reddis连接工厂-->
     <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <constructor-arg name="sentinelConfig" ref="sentinelConfiguration"/>
         <property name="usePool" value="true"/>
+        <property name="poolConfig" ref="redisPoolConfig"/>
     </bean>
+    <!--redis-spring模板-->
     <bean class="org.springframework.data.redis.core.RedisTemplate">
-        <property name="connectionFactory" ref="jedisConnectionFactory"/>
+       <property name="connectionFactory" ref="jedisConnectionFactory"/>
     </bean>
 </beans>

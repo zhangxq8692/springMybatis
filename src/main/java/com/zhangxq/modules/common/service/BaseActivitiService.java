@@ -9,5 +9,5 @@ package com.zhangxq.modules.common.service;
  * @description
  */
 public interface BaseActivitiService {
-
+    public String startProcess(String proDefId);
 }

@@ -8,7 +8,7 @@ package com.zhangxq.modules.common.constants;
  * @date: 2018/2/10 14:45
  * @description:
  */
-public class Constants {
+public interface Constants {
     /**
      * 删除标志: 0:正常
      */

@@ -1,9 +1,9 @@
-package com.zhangxq.modules.common.service;
+package com.zhangxq.modules.common.dao;
 
 import com.zhangxq.modules.common.entity.BaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit;
  * @date: 2018/3/27 11:18
  * @description:
  */
-public class BaseRedisServiceImpl<E extends BaseEntity> implements BaseRedisService<E> {
+@Component
+public class BaseRedisDaoImpl<E extends BaseEntity> implements BaseRedisDao<E> {
     /**
      * Redis模板对象
      */
@@ -31,13 +32,11 @@ public class BaseRedisServiceImpl<E extends BaseEntity> implements BaseRedisServ
     }
 
     public void cacheSet(String key, E e, int timeOut) {
-        ValueOperations<String, E> ops = redisvalue.opsForValue();
-        ops.set(key, e, timeOut, TimeUnit.SECONDS);
+        redisvalue.opsForValue().set(key, e, timeOut, TimeUnit.SECONDS);
     }
 
     public E cacheGet(String key) {
-        ValueOperations<String, E> ops = redisvalue.opsForValue();
-        return ops.get(key);
+        return redisvalue.opsForValue().get(key);
     }
 
     public E cacheGet(E e) {
@@ -45,12 +44,11 @@ public class BaseRedisServiceImpl<E extends BaseEntity> implements BaseRedisServ
     }
 
     public void cacheListSet(String key, int timeOut, List<E> list) {
-        ValueOperations<String, List<E>> ops = redisList.opsForValue();
-        ops.set(key, list, timeOut, TimeUnit.SECONDS);
+        redisList.opsForValue().set(key, list, timeOut, TimeUnit.SECONDS);
     }
 
     public List<E> cacheListGet(String key) {
-        ValueOperations<String, List<E>> ops = redisList.opsForValue();
-        return ops.get(key);
+        return redisList.opsForValue().get(key);
     }
+
 }

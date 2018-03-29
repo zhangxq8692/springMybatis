@@ -1,4 +1,4 @@
-package com.zhangxq.modules.common.service;
+package com.zhangxq.modules.common.dao;
 
 import com.zhangxq.modules.common.entity.BaseEntity;
 
@@ -12,22 +12,23 @@ import java.util.List;
  * @date: 2018/3/27 11:11
  * @description:
  */
-public interface BaseRedisService<E extends BaseEntity> {
+public interface BaseRedisDao<E extends BaseEntity> {
     /**
      * 集合对象缓存过期时间
      */
-    int TIME_OUT_LIST = 10;
+    int TIME_OUT_LIST = 20;
     /**
      * 单个对象缓存过期时间
      */
-    int TIME_OUT_OBJECT = 5;
+    int TIME_OUT_OBJECT = 10;
 
     /**
      * 存放数据
      * 对象必须继承BaseEntity
      * 对应的键为对象ID
      *
-     * @param e 对象
+     * @param e       对象
+     * @param timeout BaseRedisDao接口TIME_常量值
      * @return
      */
     public void cacheSet(E e, int timeout);
@@ -35,8 +36,9 @@ public interface BaseRedisService<E extends BaseEntity> {
     /**
      * 存放数据
      *
-     * @param key 键
-     * @param e   对象
+     * @param key     键
+     * @param e       对象
+     * @param timeout BaseRedisDao接口TIME_常量值
      * @return
      */
     public void cacheSet(String key, E e, int timeout);
@@ -62,7 +64,7 @@ public interface BaseRedisService<E extends BaseEntity> {
      * 存放一条list数据
      *
      * @param key     键
-     * @param timeOut 超时时间（秒）
+     * @param timeOut BaseRedisDao接口TIME_常量值
      * @param list    集合
      */
     public void cacheListSet(String key, int timeOut, List<E> list);
