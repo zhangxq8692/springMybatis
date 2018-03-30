@@ -28,7 +28,7 @@ import java.util.Date;
  * Include.NON_NULL 属性为NULL 不序列化
  */
 
-public class BaseEntity implements Serializable, Constants {
+public class BaseEntity extends Constants implements Serializable {
     /**
      * 实体编号（唯一ID)
      */
