@@ -16,7 +16,7 @@
         <property name="prefix" value="/WEB-INF/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-    <mvc:view-controller path="/" view-name="redirect:/test/list/"/>
+    <mvc:view-controller path="/" view-name="redirect:/test/list"/>
     <!--连接池-->
     <bean id="dbcp" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="url" value="${jdbc.url}"/>
@@ -45,6 +45,7 @@
         <property name="basePackage" value="com.zhangxq.**.dao"/>
         <!--设置扫描位置所对应注解的接口-->
         <property name="annotationClass" value="com.zhangxq.modules.common.annotation.Mybatis"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
     <!--end mybatis-->
     <!--设置activiti-->
@@ -92,13 +93,13 @@
         </constructor-arg>
     </bean>
     <!--reddis连接工厂-->
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <constructor-arg name="sentinelConfig" ref="sentinelConfiguration"/>
         <property name="usePool" value="true"/>
         <property name="poolConfig" ref="redisPoolConfig"/>
     </bean>
     <!--redis-spring模板-->
     <bean class="org.springframework.data.redis.core.RedisTemplate">
-       <property name="connectionFactory" ref="jedisConnectionFactory"/>
+       <property name="connectionFactory" ref="redisConnectionFactory"/>
     </bean>
 </beans>

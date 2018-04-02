@@ -1,5 +1,6 @@
 package com.zhangxq.modules.common.service;
 
+import com.zhangxq.modules.common.annotation.Mycache;
 import com.zhangxq.modules.common.dao.BaseDao;
 import com.zhangxq.modules.common.dao.BaseRedisDao;
 import com.zhangxq.modules.common.entity.BaseEntity;
@@ -60,8 +61,9 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
      *
      * @return
      */
+    @Mycache(key = "TService::findAllList",timeout = BaseRedisDao.TIME_OUT_LIST)
     public List<E> findAllList() {
-        // 获取一个key
+       /* // 获取一个key
         String name = getKey("findAllList");
         // 通过key在缓存中查询
         List<E> list = redisDao.cacheListGet(name);
@@ -77,6 +79,11 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
         }
 
         if (!list.isEmpty()) {
+            return list;
+        }*/
+
+        List<E> list = dao.findAll();
+        if (list != null){
             return list;
         }
         return Collections.EMPTY_LIST;

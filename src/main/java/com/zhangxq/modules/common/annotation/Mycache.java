@@ -10,10 +10,19 @@ import java.lang.annotation.Target;
  *
  * @author: zhangxq
  * @version: 1.0
- * @date: 2018/2/28 10:27
- * @description:
+ * @date: 2018/4/2 15:18
+ * @description: 自定义缓存注解
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Mybatis {
+public @interface Mycache {
+    /**
+     * 存取key值
+     */
+    String key();
+
+    /**
+     * 是否设置数据过期时间（秒）
+     */
+    int timeout() default 0;
 }

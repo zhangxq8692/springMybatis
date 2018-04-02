@@ -25,6 +25,7 @@ public abstract class BaseController<E extends BaseEntity> {
 
     @ModelAttribute(value = "e")
     public E get(E e) {
+
         if (StringUtils.isNotEmpty(e.getId())) {
             return baseService.get(e);
         }
