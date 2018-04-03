@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 
@@ -47,17 +48,29 @@ public class CacheProcess {
      */
     @Around("pointcut()")
     public Object before(ProceedingJoinPoint joinPoint) {
+
         // 获取对象签名，并转化为方法签名，
         MethodSignature m = (MethodSignature) joinPoint.getSignature();
+
         // 通过方法签名，获取方法注解
         Mycache annotation = m.getMethod().getAnnotation(Mycache.class);
+
         // 获取注解的key值
         String key = annotation.key();
+
+        // 获取注解的超时时间
+        int timeout = annotation.timeout();
+
         // 获取redis模板操作对象
         ValueOperations<String, Object> ops = objectBaseRedisDao.opsForValue();
+
         // 从redis中获取key键对应的数据
         Object result = ops.get(key);
-        // 如果数据不存在就执行方法来获取值，否则就不执行方法直接返回result
+
+        /*
+        判断缓存数据是否存在，存在直接返回数据，不存在调用目标方法从数据库获取数据
+        从缓存拿数据存在就存在，不需要做其它判断
+        */
         if (result == null) {
             synchronized (this) {
                 if (result == null) {
@@ -67,15 +80,15 @@ public class CacheProcess {
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
                     }
-                    if (result != null) {
-                        // 获取注解的超时时间
-                        int timeout = annotation.timeout();
+
+                    // 返回的对象是否为有效对象
+                    if (result instanceof Collection && result != null
+                            && ((Collection) result).size() != 0 || result != null) {
                         if (timeout == 0) {
                             ops.set(key, result);  // 不设置过期时间
                         } else {
                             ops.set(key, result, timeout, TimeUnit.SECONDS); // 设置过期时间(单位：秒)
                         }
-
                     }
                 }
             }

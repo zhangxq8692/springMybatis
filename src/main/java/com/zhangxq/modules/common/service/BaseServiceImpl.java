@@ -5,6 +5,8 @@ import com.zhangxq.modules.common.dao.BaseDao;
 import com.zhangxq.modules.common.dao.BaseRedisDao;
 import com.zhangxq.modules.common.entity.BaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +64,7 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
      * @return
      */
     @Mycache(key = "TService::findAllList",timeout = BaseRedisDao.TIME_OUT_LIST)
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<E> findAllList() {
        /* // 获取一个key
         String name = getKey("findAllList");
@@ -98,7 +101,7 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
         // 确保对象不能为NULL
         if (e != null) {
             // 判断对象是否为新数据，分别进行处理
-            if (e.isNewRecord()) {      // 新对象
+            if (e.isNewRecord()) {       // 新对象
                 // 创建并设置ID
                 e.preInset();
                 return (dao.insert(e)) != 0;
