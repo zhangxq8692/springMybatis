@@ -1,5 +1,6 @@
 package com.zhangxq.modules.common.tool;
 
+
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ public class LoggerBean {
     private Logger logger = LoggerFactory.getLogger(LoggerBean.class);
     public LoggerBean() {
         logger.info("AOP功能注入初始化");
+        System.out.println("AOP功能注入初始化");
     }
     @Before("execution(* com.zhangxq.modules.common.controller.*.list(..))")
     public void logController(){
