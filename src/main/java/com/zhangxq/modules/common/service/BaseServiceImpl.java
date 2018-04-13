@@ -63,30 +63,31 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
      *
      * @return
      */
-    @Mycache(key = "TService::findAllList",timeout = BaseRedisDao.TIME_OUT_LIST)
+    @Mycache(timeout = BaseRedisDao.TIME_OUT_LIST)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<E> findAllList() {
-       /* // 获取一个key
-        String name = getKey("findAllList");
-        // 通过key在缓存中查询
-        List<E> list = redisDao.cacheListGet(name);
-        if (list == null) {
-            synchronized (this) {
-                if (list == null) {
-                    list = dao.findAll();
-                    if (list != null) {
-                        redisDao.cacheListSet(name, BaseRedisDao.TIME_OUT_LIST, list);
+        /*{
+            // 获取一个key
+            String name = getKey("findAllList");
+            // 通过key在缓存中查询
+            List<E> list = redisDao.cacheListGet(name);
+            if (list == null) {
+                synchronized (this) {
+                    if (list == null) {
+                        list = dao.findAll();
+                        if (list != null) {
+                            redisDao.cacheListSet(name, BaseRedisDao.TIME_OUT_LIST, list);
+                        }
                     }
                 }
             }
-        }
 
-        if (!list.isEmpty()) {
-            return list;
+            if (!list.isEmpty()) {
+                return list;
+            }
         }*/
-
         List<E> list = dao.findAll();
-        if (list != null){
+        if (list != null) {
             return list;
         }
         return Collections.EMPTY_LIST;

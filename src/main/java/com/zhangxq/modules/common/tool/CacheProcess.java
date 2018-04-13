@@ -2,6 +2,8 @@ package com.zhangxq.modules.common.tool;
 
 
 import com.zhangxq.modules.common.annotation.Mycache;
+import org.activiti.engine.delegate.JavaDelegate;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.tree.ClassSignature;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -57,6 +60,12 @@ public class CacheProcess {
 
         // 获取注解的key值
         String key = annotation.key();
+        if (!StringUtils.isNoneBlank(key)) {
+            //创建一个唯一key键
+            key = joinPoint.getTarget().getClass()      //获取目标对象class对象
+                    .getSimpleName()                    //获取class类名称，不是全路径名称
+                    .concat("::").concat(m.getMethod().getName());      //追加目标方法名称
+        }
 
         // 获取注解的超时时间
         int timeout = annotation.timeout();
@@ -92,7 +101,6 @@ public class CacheProcess {
                     }
                 }
             }
-
         }
         return result;
     }

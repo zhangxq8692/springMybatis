@@ -19,7 +19,7 @@ public @interface Mycache {
     /**
      * 存取key值
      */
-    String key();
+    String key() default "";
 
     /**
      * 是否设置数据过期时间（秒）
