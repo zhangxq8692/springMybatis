@@ -29,14 +29,14 @@ public interface BaseService<E extends BaseEntity> {
 
     /**
      * 更新或添加一条记录
-     * @return 返回结果数量
+     * @return 返回结果
      */
     boolean save(E e);
 
     /**
      * 删除一条数据
      * @param e 要删除对象
-     * @return  返回结果数量
+     * @return  返回结果
      */
     boolean delete(E e);
 

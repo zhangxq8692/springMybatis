@@ -12,7 +12,7 @@ import java.util.List;
  * @date: 2018/3/27 11:11
  * @description:
  */
-public interface BaseRedisDao<E extends BaseEntity> {
+public interface BaseRedisDao<E extends BaseEntity>{
     /**
      * 集合对象缓存过期时间
      */

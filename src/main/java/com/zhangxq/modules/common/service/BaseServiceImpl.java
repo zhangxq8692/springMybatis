@@ -96,7 +96,7 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
     /**
      * 更新或添加一条记录
      *
-     * @return 返回结果数量
+     * @return 返回结果
      */
     public boolean save(E e) {
         // 确保对象不能为NULL
@@ -118,7 +118,7 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
      * 删除一条数据
      *
      * @param e 要删除对象
-     * @return 返回结果数量
+     * @return 返回结果
      */
     public boolean delete(E e) {
         return (dao.delete(e)) != 0;

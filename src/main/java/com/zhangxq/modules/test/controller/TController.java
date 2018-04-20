@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TController extends BaseController<Tentity> {
     @Autowired
     private AbService abService;
-    public String getPresentPath() {
-        return "/test";
-    }
+
     @ResponseBody
     @RequestMapping("/start/{id}")
     public String start(@PathVariable("id") String proDefId){

@@ -79,19 +79,34 @@ public abstract class BaseController<E extends BaseEntity> {
      * @return
      */
     @RequestMapping("/delete")
-    public String delete(@ModelAttribute("e")E e, Model model) {
+    public String delete(@ModelAttribute("e") E e, Model model) {
         boolean result = baseService.delete(e);
         if (!result) {
-            model.addAttribute("message","删除数据失败");
-        }else {
-            model.addAttribute("message","删除数据成功");
+            model.addAttribute("message", "删除数据失败");
+        } else {
+            model.addAttribute("message", "删除数据成功");
         }
         return "redirect:" + getPresentPath() + "/list";
     }
 
+
+
     /**
      * 获取当前类路径
-     * @return
+     * @return 当前继承类requestMapping的第一个value值
+     * @throws RuntimeException 如果当前继承类没设置requestMapping值将抛异常
      */
-    public abstract String getPresentPath();
+    public String getPresentPath() throws RuntimeException {
+        String path = null;
+        Class<? extends BaseController> presentClass = this.getClass();
+        boolean exist = presentClass.isAnnotationPresent(RequestMapping.class);
+        if (exist) {
+            RequestMapping annotation = presentClass.getAnnotation(RequestMapping.class);
+            if (annotation.value().length == 0) {
+                throw new RuntimeException("当前类" + presentClass + "未找到可用路径");
+            }
+            path = annotation.value()[0];
+        }
+        return path;
+    }
 }
