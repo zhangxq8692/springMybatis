@@ -2,6 +2,7 @@ package com.zhangxq.modules.common.tool;
 
 
 import com.zhangxq.modules.common.annotation.Mycache;
+import com.zhangxq.modules.common.entity.BaseEntity;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -57,14 +58,19 @@ public class CacheProcess {
 
         // 通过方法签名，获取方法注解
         Mycache annotation = m.getMethod().getAnnotation(Mycache.class);
-
         // 获取注解的key值
         String key = annotation.key();
         if (!StringUtils.isNoneBlank(key)) {
-            //创建一个唯一key键
-            key = joinPoint.getTarget().getClass()      //获取目标对象class对象
-                    .getSimpleName()                    //获取class类名称，不是全路径名称
-                    .concat("::").concat(m.getMethod().getName());      //追加目标方法名称
+            // 获取参数中的ID做为唯一主键
+            String id = getIdOnArgs(joinPoint);
+            if (!StringUtils.isNoneBlank()){
+                key = id;
+            }else {
+                //创建一个唯一key键
+                key = joinPoint.getTarget().getClass()      //获取目标对象class对象
+                        .getSimpleName()                    //获取class类名称，不是全路径名称
+                        .concat("::").concat(m.getMethod().getName());      //追加目标方法名称
+            }
         }
 
         // 获取注解的超时时间
@@ -104,5 +110,25 @@ public class CacheProcess {
         }
         return result;
     }
+
+    /**
+     *  获取织入点的中继承于BaseEntity的子类ID
+     * @param point 织和点
+     * @return Id
+     */
+   private String getIdOnArgs(ProceedingJoinPoint point){
+        // 获取方法所有参数
+       Object[] args = point.getArgs();
+       // 遍历参数
+       for (Object arg : args) {
+           // 判断是否为基本实体类对象子类,只有继承BaseEntity才有ID
+           if (arg instanceof BaseEntity){
+               // 返回对象的Id
+               return ((BaseEntity) arg).getId();
+           }
+       }
+       return null;
+   }
+
 
 }

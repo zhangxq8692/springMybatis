@@ -39,8 +39,9 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
      * @param e
      * @return
      */
+    @Mycache(timeout = BaseRedisDao.TIME_OUT_OBJECT)
     public E get(E e) {
-        // 从缓存中获取数据
+      /*  // 从缓存中获取数据
         E t = redisDao.cacheGet(e);
         // 数据不存在时处理
         if (t == null) {
@@ -54,8 +55,8 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
                     }
                 }
             }
-        }
-        return t;
+        }*/
+        return dao.get(e);
     }
 
     /**
@@ -64,7 +65,7 @@ public class BaseServiceImpl<E extends BaseEntity> implements BaseService<E> {
      * @return
      */
     @Mycache(timeout = BaseRedisDao.TIME_OUT_LIST)
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @Transactional(propagation = Propagation.NOT_SUPPORTED,readOnly = true)
     public List<E> findAllList() {
         /*{
             // 获取一个key
