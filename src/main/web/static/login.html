@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>index</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <style>
+        *{
+            font-family: 微软雅黑;
+        }
+        .login{
+           margin-top: 80px;
+            padding:15px 60px;
+            border-radius: 30px;
+        }
+        .btn{
+            margin: 15px 5px;
+        }
+        .other{
+            color: #fff;
+            margin-right: 5px;
+        }
+        .container{
+            margin-top: 100px;
+            margin-left: 0px;
+            width: 100%;
+            height: 500px;
+            border:1px solid black;
+            background-image: url("img/background.jpg");
+        }
+        body{
+            background-color: rgba(255, 232, 79, 0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="col-md-3 col-md-offset-6 bg-primary login">
+            <h3 class="page-header">登 陆</h3>
+            <form action="#">
+                <div class="form-group input-group">
+                    <span class="input-group-addon" id="user"><label class="glyphicon glyphicon-user"/></span>
+                    <input type="text" class="form-control" aria-describedby="user" placeholder="username">
+                </div>
+                <div class="form-group input-group">
+                    <span class="input-group-addon" id="pass"><label class="glyphicon glyphicon-lock"/></span>
+                    <input type="password" class="form-control" aria-describedby="pass" placeholder="password">
+                </div>
+                <div class="form-group text-center">
+                    <input type="submit" class="btn btn-success" value="登陆">
+                    <input type="reset" class="btn btn-danger" value="重置">
+                </div>
+                <div class="form-group text-right">
+                    <a href="" class="other">忘记密码</a>
+                    <a href="" class="other">注&nbsp;&nbsp;&nbsp;册</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
